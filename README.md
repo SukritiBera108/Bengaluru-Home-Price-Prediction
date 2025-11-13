@@ -10,3 +10,13 @@
 ​total_sqft: The total area of the property in square feet.
 ​bathrooms: Number of bathrooms.
 ​price: The target variable—price of the property in Lakhs or Crore(INR).
+​🛠️ 3. Technologies and Libraries
+​The project is developed using the Python programming language and relies on the following major libraries:
+​Data Manipulation: Pandas, NumPy
+​Data Visualization: Matplotlib
+​Machine Learning: Scikit-learn (for model selection, training, and evaluation)
+​Jupyter Notebook: For interactive development and documentation.
+● Web Deployment and Frontend
+Backend Framework: Flask
+Frontend Structure: HTML
+Frontend Styling: CSS
