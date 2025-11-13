@@ -20,6 +20,7 @@
 ●​Machine Learning: Scikit-learn (for model selection, training, and evaluation)
 ●​Jupyter Notebook: For interactive development and documentation.
 ■■Web Deployment and Frontend
+
 ●Backend Framework: Flask
 ●Frontend Structure: HTML
 ●Frontend Styling: CSS
