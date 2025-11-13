@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Bengaluru Home Price Prediction</title>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='app.css') }}"/>
+</head>
+<body>
+
+  <div class="background-gradient"></div>
+
+  <div class="main">
+    <div class="main-header">
+      <h1>Bengaluru Home Price Prediction</h1>
+
+      <div class="theme-switch-wrapper">
+        <label class="theme-switch" aria-label="Toggle light and dark theme">
+          <input type="checkbox" id="theme-toggle" />
+          <div class="slider">
+            <div class="icon sun" aria-hidden="true"></div>
+            <div class="icon moon" aria-hidden="true"></div>
+            <div class="stars" aria-hidden="true">
+              <span class="star"></span>
+              <span class="star"></span>
+              <span class="star"></span>
+            </div>
+          </div>
+        </label>
+      </div>
+    </div>
+
+    <form action="{{ url_for('predict_home_price') }}" method="post" novalidate>
+      <h2>Area (Square Feet)</h2>
+      <input class="area" type="text" id="uiSqft" name="total_sqft" placeholder="e.g., 1200"
+             value="{{ request.form.total_sqft if request.form.total_sqft else '' }}" required />
+
+      <h2>BHK</h2>
+      <div class="switch-field">
+        {% for i in range(1,6) %}
+          <input type="radio" id="radio-bhk-{{ i }}" name="bhk" value="{{ i }}" 
+            {% if request.form.bhk|default('2') == i|string %}checked{% endif %}/>
+          <label for="radio-bhk-{{ i }}">{{ i }}</label>
+        {% endfor %}
+      </div>
+
+      <h2>Bathrooms</h2>
+      <div class="switch-field">
+        {% for i in range(1,6) %}
+          <input type="radio" id="radio-bath-{{ i }}" name="bath" value="{{ i }}" 
+            {% if request.form.bath|default('2') == i|string %}checked{% endif %}/>
+          <label for="radio-bath-{{ i }}">{{ i }}</label>
+        {% endfor %}
+      </div>
+
+      <h2>Location</h2>
+      <div>
+        <select class="location" name="location" id="uiLocations">
+          <option value="" disabled {% if not request.form.location %}selected{% endif %}>Choose a Location</option>
+          {% if request.form.location %}
+            <option value="{{ request.form.location }}" selected>{{ request.form.location }}</option>
+          {% endif %}
+        </select>
+      </div>
+
+      <button class="submit" type="submit"><span>Predict Price</span></button>
+    </form>
+
+    {% if prediction_text %}
+    <div id="uiResult" class="result {{ 'error' if is_error else '' }}">
+      <h2>{{ prediction_text }}</h2>
+    </div>
+    {% endif %}
+  </div>
+
+  <script>
+    function onPageLoad() {
+      $.get("/get_location_names", function(data) {
+        if (data && data.locations) {
+          const $sel = $('#uiLocations');
+          $sel.empty();
+          const placeholder = new Option("Choose a Location", "", true, true);
+          $(placeholder).prop("disabled", true);
+          $sel.append(placeholder);
+          data.locations.forEach(loc => {
+            const selected = loc === "{{ request.form.location|default('') }}" ? true : false;
+            $sel.append(new Option(loc, loc, selected, selected));
+          });
+        }
+      });
+    }
+    window.onload = onPageLoad;
+
+    const toggleSwitch = document.getElementById('theme-toggle');
+    const currentTheme = localStorage.getItem('theme');
+    function setTheme(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      localStorage.setItem('theme', theme);
+      toggleSwitch.checked = theme === 'dark';
+    }
+    setTheme(currentTheme || 'light');
+    toggleSwitch.addEventListener('change', () => setTheme(toggleSwitch.checked ? 'dark' : 'light'));
+
+    document.querySelector('.submit').addEventListener('click', function(e) {
+      const button = e.currentTarget;
+      const ripple = document.createElement('span');
+      const rect = button.getBoundingClientRect();
+      const size = Math.max(rect.width, rect.height);
+      const x = e.clientX - rect.left - size / 2;
+      const y = e.clientY - rect.top - size / 2;
+      ripple.style.width = ripple.style.height = `${size}px`;
+      ripple.style.left = `${x}px`;
+      ripple.style.top = `${y}px`;
+      ripple.className = 'ripple';
+      button.querySelectorAll('.ripple').forEach(r => r.remove());
+      button.appendChild(ripple);
+      ripple.addEventListener('animationend', () => ripple.remove());
+    });
+
+    const locationSel = document.getElementById('uiLocations');
+    locationSel.addEventListener('focus', () => locationSel.classList.add('focused'));
+    locationSel.addEventListener('blur',  () => locationSel.classList.remove('focused'));
+  </script>
+</body>
+</html>
+
+

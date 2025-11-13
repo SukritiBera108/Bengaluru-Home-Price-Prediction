@@ -1,0 +1,410 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+/* =========================================
+   THEME VARIABLES
+========================================= */
+:root {
+  --text: #222;
+  --heading: #111;
+  --glass: rgba(255, 255, 255, 0.16);
+  --border: rgba(255, 255, 255, 0.35);
+  --transition: 0.5s;
+
+  /* Background animation: light mode colors (pink → orange → yellow) */
+  --light-1: #ff9a9e;
+  --light-2: #ffb36b;
+  --light-3: #ffe066;
+
+  /* Background animation: dark mode colors (dark blue → dark green → black) */
+  --dark-1: #0a2342;
+  --dark-2: #0b3d2e;
+  --dark-3: #000000;
+
+  /* Controls + accents */
+  --primary-blue: #1a73e8;
+  --red-strong: #e53935;
+
+  /* Area glow colors per theme */
+  --area-glow-light: rgba(229, 57, 53, 0.65); /* red */
+  --area-glow-dark:  rgba(26, 115, 232, 0.65); /* blue */
+
+  /* Submit button per theme */
+  --submit-bg: linear-gradient(135deg, #e53935, #b71c1c); /* light: red glossy */
+  --submit-shadow: rgba(229, 57, 53, 0.6);
+
+  /* Result box (Estimated Price) per theme */
+  --result-bg: rgba(0, 0, 0, 0.06);
+  --result-text: #0b6b2d;   /* dark green for light mode */
+  --result-text-gloss: linear-gradient(180deg, #1dd15a, #0b8c39); /* used in dark mode */
+
+  /* Radio buttons (BHK/Bath) light defaults (glossy red) */
+  --radio-grad: linear-gradient(145deg, #ff4b4b, #c62828);
+  --radio-grad-hover: linear-gradient(145deg, #ff6b6b, #b71c1c);
+  --radio-grad-active: linear-gradient(145deg, #ff8a80, #e53935);
+}
+[data-theme="dark"] {
+  --text: #eaeaea;
+  --heading: #ffffff;
+  --glass: rgba(0, 0, 0, 0.35);
+  --border: rgba(255, 255, 255, 0.22);
+
+  /* Submit: dark → glossy blue */
+  --submit-bg: linear-gradient(135deg, #1a73e8, #0044cc);
+  --submit-shadow: rgba(26, 115, 232, 0.6);
+
+  /* Result text glossy green in night mode */
+  --result-bg: rgba(13, 71, 161, 0.15);
+  --result-text: transparent; /* We'll render glossy with background-clip */
+  --result-text-gloss: linear-gradient(180deg, #44ff9a, #17b26a);
+
+  /* Radio buttons: glossy blue in dark mode */
+  --radio-grad: linear-gradient(145deg, #1a73e8, #0044cc);
+  --radio-grad-hover: linear-gradient(145deg, #3f8cff, #0044cc);
+  --radio-grad-active: linear-gradient(145deg, #72a8ff, #1a73e8);
+}
+
+/* =========================================
+   BASE LAYOUT
+========================================= */
+* { box-sizing: border-box; }
+html, body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: 'Poppins', system-ui, -apple-system, Segoe UI, Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', sans-serif;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* Animated background that cycles by theme */
+.background-gradient {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  animation: lightCycle 12s ease-in-out infinite;
+  transition: filter var(--transition), opacity var(--transition);
+}
+@keyframes lightCycle {
+  0%   { background: linear-gradient(120deg, var(--light-1), var(--light-2)); }
+  50%  { background: linear-gradient(120deg, var(--light-2), var(--light-3)); }
+  100% { background: linear-gradient(120deg, var(--light-3), var(--light-1)); }
+}
+[data-theme="dark"] .background-gradient {
+  animation: darkCycle 12s ease-in-out infinite;
+}
+@keyframes darkCycle {
+  0%   { background: linear-gradient(120deg, var(--dark-1), var(--dark-2)); }
+  50%  { background: linear-gradient(120deg, var(--dark-2), var(--dark-3)); }
+  100% { background: linear-gradient(120deg, var(--dark-3), var(--dark-1)); }
+}
+
+/* Main card */
+.main {
+  background: var(--glass);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  backdrop-filter: blur(14px);
+  padding: 1.7rem 2rem;
+  max-width: 500px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 6px 28px rgba(0, 0, 0, 0.25);
+  position: relative;
+}
+
+/* NEW: header row to prevent overlap */
+.main-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:1rem;
+  margin-bottom:1rem;
+}
+.main-header h1{
+  margin:0;               /* avoid extra spacing in header */
+  font-size:2rem;
+  color:var(--heading);
+}
+
+/* Red body glow when invalid (triggered by class or by .result.error presence) */
+body.has-invalid .main,
+body:has(.result.error) .main {
+  box-shadow: 0 0 0 4px rgba(229, 57, 53, 0.3), 0 6px 28px rgba(229, 57, 53, 0.5);
+}
+
+/* =========================================
+   HEADINGS & TEXT (non-header h1 fallback)
+========================================= */
+h1 {
+  color: var(--heading);
+  margin: 0 0 1.2rem;
+  font-size: 2rem;
+  font-weight: 700;
+}
+h2 {
+  color: var(--heading);
+  margin: 0.8rem 0 0.4rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  text-align: left;
+}
+
+/* =========================================
+   INPUTS
+========================================= */
+.area, .location {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  font-size: 1rem;
+  background: rgba(255, 255, 255, 0.28);
+  transition: border var(--transition), box-shadow var(--transition), background var(--transition), color var(--transition);
+}
+
+/* Area glow: red in light mode, blue in dark mode */
+.area:focus {
+  outline: none;
+  border-color: currentColor;
+  box-shadow: 0 0 0 4px var(--area-glow-light);
+}
+[data-theme="dark"] .area {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.12);
+}
+[data-theme="dark"] .area:focus {
+  box-shadow: 0 0 0 4px var(--area-glow-dark);
+}
+
+/* Location select special focus */
+.location:focus { outline: none; }
+.location.focused {
+  background:#fff; color:#000;
+}
+[data-theme="dark"] .location.focused {
+  background:#0d1b2a; color:#fff;
+}
+
+/* =========================================
+   THEME TOGGLE (Sun ↔ Moon)
+   (now positioned statically inside header)
+========================================= */
+.theme-switch-wrapper { position: static; } /* <-- fixed: no absolute positioning */
+.theme-switch { position: relative; display: inline-block; width: 72px; height: 36px; }
+.theme-switch input { opacity: 0; width: 0; height: 0; }
+.slider {
+  position: absolute; inset: 0; cursor: pointer; border-radius: 40px; overflow: hidden;
+  background: #f6d365; transition: background var(--transition);
+}
+.icon {
+  position: absolute; top: 4px; left: 4px; width: 28px; height: 28px; border-radius: 50%;
+  box-shadow: 0 4px 10px rgba(0,0,0,.2);
+  transition: transform var(--transition), opacity var(--transition), filter var(--transition);
+}
+.sun { background: radial-gradient(circle at 30% 30%, #ffd700, #f39c12); }
+.moon {
+  width: 28px;
+  height: 28px;
+  background: #ffffff;          /* full moon base */
+  border-radius: 50%;           /* circular shape */
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  opacity: 0;
+  filter: drop-shadow(0 0 6px rgba(255,255,255,.35));
+  transform: rotate(45deg);     /* 🌙 Tilted for natural look */
+  overflow: hidden;
+}
+
+/* Overlay to cut the crescent */
+.moon::after {
+  content: "";
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  background: #2c3e50;         /* same as dark background */
+  border-radius: 50%;
+  left: 8px;                   /* adjust crescent thickness */
+  top: 0;
+}
+
+.stars {
+  position: absolute; inset: 0; opacity: 0; transition: opacity var(--transition);
+}
+.stars .star {
+  position: absolute; width: 4px; height: 4px; background: #fff; border-radius: 50%;
+  animation: twinkle 2s infinite ease-in-out;
+}
+.stars .star:nth-child(1) { top: 6px; left: 42px; }
+.stars .star:nth-child(2) { top: 20px; left: 16px; width: 3px; height: 3px; }
+.stars .star:nth-child(3) { top: 12px; left: 58px; width: 2px; height: 2px; }
+@keyframes twinkle { 0%,100% { opacity: 1; } 50% { opacity: .35; } }
+
+input:checked + .slider { background: #2c3e50; }
+input:checked + .slider .icon.sun { transform: translateX(36px) scale(0); opacity: 0; }
+input:checked + .slider .icon.moon {
+  transform: translateX(36px) scale(1); opacity: 1;
+  animation: moonPulse 2.2s ease-in-out infinite;
+}
+input:checked + .slider .stars { opacity: 1; }
+
+@keyframes moonPulse {
+  0%,100% { box-shadow: 0 0 0 0 rgba(255,255,255,0.25); }
+  50%     { box-shadow: 0 0 14px 6px rgba(255,255,255,0.2); }
+}
+
+/* =========================================
+   RADIO FIELDS (BHK / BATH)
+========================================= */
+.switch-field {
+  display: flex;
+  gap: 8px;
+  background: transparent;
+  border: none;
+  margin: 0 0 0.25rem;
+}
+.switch-field input { display: none; }
+
+.switch-field label {
+  flex: 1;
+  text-align: center;
+  padding: 10px 12px;
+  color: #fff;
+  border-radius: 10px;
+  cursor: pointer;
+  user-select: none;
+  background: var(--radio-grad);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.18);
+  transition: transform .18s ease, filter .18s ease, background .3s ease, color .3s ease, box-shadow .3s ease;
+  position: relative;
+  overflow: hidden;
+}
+.switch-field label::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.25), transparent 60%);
+  opacity: .4; transition: opacity .3s ease;
+}
+.switch-field label:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.06);
+  background: var(--radio-grad-hover);
+}
+.switch-field label:active {
+  transform: translateY(0);
+  background: var(--radio-grad-active);
+}
+.switch-field input:checked + label {
+  background: #ffffff;
+  color: #111;
+  box-shadow: inset 0 2px 6px rgba(0,0,0,0.18), 0 6px 20px rgba(0,0,0,0.2);
+  transform: translateY(-1px) scale(1.01);
+}
+
+/* =========================================
+   SUBMIT (Predict Price) BUTTON
+========================================= */
+.submit {
+  margin-top: 1.7rem;
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 12px;
+  background: var(--submit-bg);
+  color: #fff;
+  font-size: 1.2rem;
+  font-weight: 700;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: transform .2s ease, box-shadow .3s ease, filter .2s ease;
+}
+.submit:hover {
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 0 28px var(--submit-shadow);
+}
+.submit:active { transform: translateY(-1px) scale(0.995); }
+.submit span { position: relative; z-index: 2; }
+.ripple {
+  position: absolute; border-radius: 50%;
+  background: rgba(255,255,255,0.6);
+  transform: scale(0);
+  animation: ripple .6s linear forwards;
+}
+@keyframes ripple { to { transform: scale(4); opacity: 0; } }
+
+/* =========================================
+   RESULT BOX (Estimated Price)
+========================================= */
+.result {
+  margin-top: 1.4rem;
+  padding: 1rem 1.1rem;
+  background: var(--result-bg);
+  border-left: 5px solid rgba(0,0,0,0.15);
+  border-radius: 10px;
+  backdrop-filter: blur(6px);
+  text-align: center;
+}
+.result h2 {
+  margin: 0;
+  font-weight: 800;
+  line-height: 1.2;
+  font-size: 1.6rem; /* bigger */
+  color: var(--result-text);
+}
+[data-theme="dark"] .result h2 {
+  background: var(--result-text-gloss);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.result.error {
+  background: rgba(229, 57, 53, 0.12);
+  border-left-color: #e53935;
+  box-shadow: 0 0 0 3px rgba(229,57,53,0.18) inset;
+}
+.result.error h2 {
+  color: #e53935 !important;
+  font-size: 1.6rem;
+}
+body:has(.result.error) .background-gradient {
+  filter: drop-shadow(0 0 18px rgba(229,57,53,0.55));
+}
+
+/* =========================================
+   MISC
+========================================= */
+::placeholder { color: rgba(0,0,0,0.55); }
+[data-theme="dark"] ::placeholder { color: rgba(255,255,255,0.66); }
+[data-theme="dark"] .location, [data-theme="dark"] .area { color: #fff; }
+
+/* Responsive: keep header clean on small screens */
+@media (max-width: 520px) {
+  .main { padding: 1.3rem 1.2rem; border-radius: 16px; }
+  .main-header { flex-wrap: wrap; gap: .5rem; }
+  .main-header h1 { flex: 1 1 100%; text-align: center; }
+}
+
+.area:focus-visible, .location:focus-visible, .submit:focus-visible, .theme-switch input:focus-visible + .slider {
+  outline: 3px solid rgba(255,255,255,.6);
+  outline-offset: 2px;
+}
+.form-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 1rem;
+}
+/* Reset button styling */
+.button-group {
+  display: flex;
+  gap: 12px;
+  margin-top: 1.7rem;
+}
+
+
+
+
