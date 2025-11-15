@@ -28,7 +28,7 @@ def get_estimated_price(location, sqft, bath, bhk):
 
     # Format the price with "Lakhs"
     prediction = round(__model.predict([x])[0], 2)
-    return f"{prediction} Lakhs"
+    return prediction
 
 def load_saved_artifacts():
     """
@@ -79,3 +79,4 @@ if __name__ == '__main__':
     print(get_location_names())
     print(get_estimated_price('1st Phase JP Nagar', 1000, 2, 2))
     print(get_estimated_price('1st Phase JP Nagar', 1000, 3, 3))
+
