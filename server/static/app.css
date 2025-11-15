@@ -1,8 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
 
-/* =========================================
-   THEME VARIABLES
-========================================= */
 :root {
   --text: #222;
   --heading: #111;
@@ -10,34 +7,31 @@
   --border: rgba(255, 255, 255, 0.35);
   --transition: 0.5s;
 
-  /* Background animation: light mode colors (pink → orange → yellow) */
   --light-1: #ff9a9e;
   --light-2: #ffb36b;
   --light-3: #ffe066;
 
-  /* Background animation: dark mode colors (dark blue → dark green → black) */
   --dark-1: #0a2342;
   --dark-2: #0b3d2e;
   --dark-3: #000000;
 
-  /* Controls + accents */
+
   --primary-blue: #1a73e8;
   --red-strong: #e53935;
 
-  /* Area glow colors per theme */
-  --area-glow-light: rgba(229, 57, 53, 0.65); /* red */
-  --area-glow-dark:  rgba(26, 115, 232, 0.65); /* blue */
 
-  /* Submit button per theme */
-  --submit-bg: linear-gradient(135deg, #e53935, #b71c1c); /* light: red glossy */
+  --area-glow-light: rgba(229, 57, 53, 0.65);
+  --area-glow-dark:  rgba(26, 115, 232, 0.65); 
+
+
+  --submit-bg: linear-gradient(135deg, #e53935, #b71c1c); 
   --submit-shadow: rgba(229, 57, 53, 0.6);
 
-  /* Result box (Estimated Price) per theme */
-  --result-bg: rgba(0, 0, 0, 0.06);
-  --result-text: #0b6b2d;   /* dark green for light mode */
-  --result-text-gloss: linear-gradient(180deg, #1dd15a, #0b8c39); /* used in dark mode */
 
-  /* Radio buttons (BHK/Bath) light defaults (glossy red) */
+  --result-bg: rgba(0, 0, 0, 0.06);
+  --result-text: #0b6b2d;  
+  --result-text-gloss: linear-gradient(180deg, #1dd15a, #0b8c39); 
+
   --radio-grad: linear-gradient(145deg, #ff4b4b, #c62828);
   --radio-grad-hover: linear-gradient(145deg, #ff6b6b, #b71c1c);
   --radio-grad-active: linear-gradient(145deg, #ff8a80, #e53935);
@@ -48,24 +42,22 @@
   --glass: rgba(0, 0, 0, 0.35);
   --border: rgba(255, 255, 255, 0.22);
 
-  /* Submit: dark → glossy blue */
+ 
   --submit-bg: linear-gradient(135deg, #1a73e8, #0044cc);
   --submit-shadow: rgba(26, 115, 232, 0.6);
 
-  /* Result text glossy green in night mode */
+ 
   --result-bg: rgba(13, 71, 161, 0.15);
-  --result-text: transparent; /* We'll render glossy with background-clip */
+  --result-text: transparent;
   --result-text-gloss: linear-gradient(180deg, #44ff9a, #17b26a);
 
-  /* Radio buttons: glossy blue in dark mode */
+  
   --radio-grad: linear-gradient(145deg, #1a73e8, #0044cc);
   --radio-grad-hover: linear-gradient(145deg, #3f8cff, #0044cc);
   --radio-grad-active: linear-gradient(145deg, #72a8ff, #1a73e8);
 }
 
-/* =========================================
-   BASE LAYOUT
-========================================= */
+
 * { box-sizing: border-box; }
 html, body {
   height: 100%;
@@ -80,7 +72,7 @@ body {
   overflow: hidden;
 }
 
-/* Animated background that cycles by theme */
+
 .background-gradient {
   position: fixed;
   inset: 0;
@@ -102,7 +94,7 @@ body {
   100% { background: linear-gradient(120deg, var(--dark-3), var(--dark-1)); }
 }
 
-/* Main card */
+
 .main {
   background: var(--glass);
   border: 1px solid var(--border);
@@ -116,7 +108,7 @@ body {
   position: relative;
 }
 
-/* NEW: header row to prevent overlap */
+
 .main-header{
   display:flex;
   align-items:center;
@@ -125,20 +117,17 @@ body {
   margin-bottom:1rem;
 }
 .main-header h1{
-  margin:0;               /* avoid extra spacing in header */
+  margin:0;              
   font-size:2rem;
   color:var(--heading);
 }
 
-/* Red body glow when invalid (triggered by class or by .result.error presence) */
+
 body.has-invalid .main,
 body:has(.result.error) .main {
   box-shadow: 0 0 0 4px rgba(229, 57, 53, 0.3), 0 6px 28px rgba(229, 57, 53, 0.5);
 }
 
-/* =========================================
-   HEADINGS & TEXT (non-header h1 fallback)
-========================================= */
 h1 {
   color: var(--heading);
   margin: 0 0 1.2rem;
@@ -153,9 +142,7 @@ h2 {
   text-align: left;
 }
 
-/* =========================================
-   INPUTS
-========================================= */
+
 .area, .location {
   width: 100%;
   padding: 12px;
@@ -166,7 +153,6 @@ h2 {
   transition: border var(--transition), box-shadow var(--transition), background var(--transition), color var(--transition);
 }
 
-/* Area glow: red in light mode, blue in dark mode */
 .area:focus {
   outline: none;
   border-color: currentColor;
@@ -180,7 +166,6 @@ h2 {
   box-shadow: 0 0 0 4px var(--area-glow-dark);
 }
 
-/* Location select special focus */
 .location:focus { outline: none; }
 .location.focused {
   background:#fff; color:#000;
@@ -189,11 +174,7 @@ h2 {
   background:#0d1b2a; color:#fff;
 }
 
-/* =========================================
-   THEME TOGGLE (Sun ↔ Moon)
-   (now positioned statically inside header)
-========================================= */
-.theme-switch-wrapper { position: static; } /* <-- fixed: no absolute positioning */
+.theme-switch-wrapper { position: static; } 
 .theme-switch { position: relative; display: inline-block; width: 72px; height: 36px; }
 .theme-switch input { opacity: 0; width: 0; height: 0; }
 .slider {
@@ -209,26 +190,25 @@ h2 {
 .moon {
   width: 28px;
   height: 28px;
-  background: #ffffff;          /* full moon base */
-  border-radius: 50%;           /* circular shape */
+  background: #ffffff;          
+  border-radius: 50%;           
   position: absolute;
   top: 4px;
   left: 4px;
   opacity: 0;
   filter: drop-shadow(0 0 6px rgba(255,255,255,.35));
-  transform: rotate(45deg);     /* 🌙 Tilted for natural look */
+  transform: rotate(45deg);    
   overflow: hidden;
 }
 
-/* Overlay to cut the crescent */
 .moon::after {
   content: "";
   position: absolute;
   width: 28px;
   height: 28px;
-  background: #2c3e50;         /* same as dark background */
+  background: #2c3e50;         
   border-radius: 50%;
-  left: 8px;                   /* adjust crescent thickness */
+  left: 8px;                   
   top: 0;
 }
 
@@ -257,9 +237,6 @@ input:checked + .slider .stars { opacity: 1; }
   50%     { box-shadow: 0 0 14px 6px rgba(255,255,255,0.2); }
 }
 
-/* =========================================
-   RADIO FIELDS (BHK / BATH)
-========================================= */
 .switch-field {
   display: flex;
   gap: 8px;
@@ -305,9 +282,6 @@ input:checked + .slider .stars { opacity: 1; }
   transform: translateY(-1px) scale(1.01);
 }
 
-/* =========================================
-   SUBMIT (Predict Price) BUTTON
-========================================= */
 .submit {
   margin-top: 1.7rem;
   width: 100%;
@@ -337,9 +311,6 @@ input:checked + .slider .stars { opacity: 1; }
 }
 @keyframes ripple { to { transform: scale(4); opacity: 0; } }
 
-/* =========================================
-   RESULT BOX (Estimated Price)
-========================================= */
 .result {
   margin-top: 1.4rem;
   padding: 1rem 1.1rem;
@@ -353,7 +324,7 @@ input:checked + .slider .stars { opacity: 1; }
   margin: 0;
   font-weight: 800;
   line-height: 1.2;
-  font-size: 1.6rem; /* bigger */
+  font-size: 1.6rem; 
   color: var(--result-text);
 }
 [data-theme="dark"] .result h2 {
@@ -375,14 +346,10 @@ body:has(.result.error) .background-gradient {
   filter: drop-shadow(0 0 18px rgba(229,57,53,0.55));
 }
 
-/* =========================================
-   MISC
-========================================= */
 ::placeholder { color: rgba(0,0,0,0.55); }
 [data-theme="dark"] ::placeholder { color: rgba(255,255,255,0.66); }
 [data-theme="dark"] .location, [data-theme="dark"] .area { color: #fff; }
 
-/* Responsive: keep header clean on small screens */
 @media (max-width: 520px) {
   .main { padding: 1.3rem 1.2rem; border-radius: 16px; }
   .main-header { flex-wrap: wrap; gap: .5rem; }
@@ -398,12 +365,13 @@ body:has(.result.error) .background-gradient {
   gap: 10px;
   margin-top: 1rem;
 }
-/* Reset button styling */
+
 .button-group {
   display: flex;
   gap: 12px;
   margin-top: 1.7rem;
 }
+
 
 
 
