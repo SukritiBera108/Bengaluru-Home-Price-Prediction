@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify, render_template
-import util
+from . import util
 
 app = Flask(__name__, static_url_path="/static")
 
@@ -48,4 +48,5 @@ if __name__ == "__main__":
     print("Starting Python Flask Server For Home Price Prediction...")
     util.load_saved_artifacts()
     app.run(debug=True)
+
 
