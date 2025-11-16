@@ -16,6 +16,7 @@
 ​price: The target variable—price of the property in Lakhs or Crore(INR).
 
 ​🛠️ 3. Technologies and Libraries
+
 ​The project is developed using the Python programming language and relies on the following major libraries:
 
 ●​Data Manipulation: Pandas, NumPy
