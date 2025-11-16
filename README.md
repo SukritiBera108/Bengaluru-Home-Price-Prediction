@@ -2,9 +2,11 @@
 ​This document provides an overview of the "Bengaluru Home Price Prediction" project.
 
 ​📝 1. Project Overview
+
 ​The goal of this project is to build a regression model capable of accurately predicting residential property prices in Bengaluru (Bangalore), India. The predictions are based on various features of the property, such as location, size (in bhk),square feet, number of bathrooms, and availability of amenities.
 
 ​📊 2. Data Source and Description
+
 ​The dataset used is scraped from publicly available real estate websites and includes the following key columns:
 ​location: The specific locality or neighborhood in Bengaluru.
 ​size: The number of bedrooms, often represented as BHK (Bedroom, Hall, Kitchen).
